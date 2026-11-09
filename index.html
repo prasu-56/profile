@@ -3,504 +3,541 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>G prasanna - Web Developer Portfolio</title>
+  <title>Photo Sliding Puzzle</title>
   <style>
     :root {
-      --bg-dark: #0b0e14;
-      --card-bg: rgba(18, 24, 38, 0.75);
-      --card-border: rgba(56, 189, 248, 0.2);
-      --cyan: #38bdf8;
-      --accent-purple: #818cf8;
-      --code-green: #4ade80;
-      --code-pink: #f472b6;
-      --text-main: #f1f5f9;
+      --bg-color: #0f172a;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.4);
+      --text: #f8fafc;
       --text-sub: #94a3b8;
     }
 
     * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
+      background-color: var(--bg-color);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: flex-start;
-      padding: 50px 20px;
-      overflow-x: hidden;
-      perspective: 1200px;
-    }
-
-    /* ===== BACKGROUND CIRCUIT CANVAS ===== */
-    #circuit-canvas {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.4;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 950px;
-      position: relative;
-      z-index: 2;
-    }
-
-    /* ===== 3D LAPTOP ANIMATION ===== */
-    .laptop-stage {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      margin-bottom: 40px;
-      perspective: 1000px;
-    }
-
-    .laptop {
-      width: 100%;
-      max-width: 650px;
-      position: relative;
-      transform-style: preserve-3d;
-    }
-
-    .laptop-screen {
-      background: #0f172a;
-      border: 12px solid #1e293b;
-      border-radius: 16px 16px 0 0;
       padding: 20px;
-      box-shadow: 0 0 40px rgba(56, 189, 248, 0.25), inset 0 0 15px rgba(0,0,0,0.8);
-      position: relative;
-      transform-origin: bottom center;
-      transform: rotateX(-90deg);
-      animation: openLaptop 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
-      border-bottom: none;
-      min-height: 240px;
     }
 
-    @keyframes openLaptop {
-      to { transform: rotateX(0deg); }
-    }
-
-    .laptop-base {
-      width: 110%;
-      height: 16px;
-      background: linear-gradient(180deg, #334155, #0f172a);
-      margin-left: -5%;
-      border-radius: 0 0 16px 16px;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.7);
-      position: relative;
-    }
-
-    .laptop-notch {
-      width: 80px;
-      height: 6px;
-      background: #1e293b;
-      margin: 0 auto;
-      border-radius: 0 0 6px 6px;
-    }
-
-    /* VS CODE EDITOR WINDOW INSIDE LAPTOP */
-    .vscode-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .btn-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-    }
-    .btn-red { background: #ef4444; }
-    .btn-yellow { background: #eab308; }
-    .btn-green { background: #22c55e; }
-
-    .vscode-file {
-      font-family: monospace;
-      font-size: 12px;
-      color: var(--text-sub);
-      margin-left: 10px;
-    }
-
-    .code-line {
-      font-family: 'Consolas', 'Fira Code', monospace;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .tag { color: var(--code-pink); }
-    .attr { color: var(--cyan); }
-    .val { color: var(--code-green); }
-
-    /* ===== DEVELOPER CARD CONTAINER ===== */
-    .dev-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 35px;
-      margin-bottom: 25px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .dev-card:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 30px rgba(56, 189, 248, 0.2);
-      transform: translateY(-4px);
-    }
-
-    /* PROFILE LAYOUT */
-    .profile-flex {
-      display: flex;
-      gap: 30px;
-      align-items: center;
-    }
-
-    .avatar-wrapper {
-      position: relative;
-      width: 140px;
-      height: 140px;
-      flex-shrink: 0;
-    }
-
-    .avatar-wrapper::after {
-      content: '';
-      position: absolute;
-      inset: -8px;
-      border-radius: 50%;
-      border: 2px dashed var(--cyan);
-      animation: spin 10s linear infinite;
-    }
-
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-
-    .profile-img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--cyan);
-    }
-
-    .dev-name {
-      font-size: 34px;
-      font-weight: 800;
-      background: linear-gradient(90deg, #ffffff, var(--cyan));
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #ffffff, var(--accent));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 5px;
     }
 
-    .dev-role {
-      color: var(--accent-purple);
-      font-weight: 600;
-      font-size: 16px;
-      margin-bottom: 15px;
+    p.subtitle {
+      color: var(--text-sub);
+      margin-bottom: 20px;
+      font-size: 0.95rem;
     }
 
-    .contact-row {
+    .game-container {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    /* CONTROLS BAR */
+    .controls-bar {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      font-size: 13px;
-      color: var(--text-sub);
+      justify-content: center;
+      width: 100%;
     }
 
-    .contact-row span {
+    select, button, input[type="file"] {
       background: rgba(255, 255, 255, 0.05);
-      padding: 6px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .socials {
-      display: flex;
-      gap: 12px;
-      margin-top: 15px;
-    }
-
-    .social-btn {
+      color: var(--text);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       padding: 8px 16px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid var(--card-border);
-      color: var(--cyan);
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: bold;
       border-radius: 8px;
-      transition: all 0.3s;
-    }
-
-    .social-btn:hover {
-      background: var(--cyan);
-      color: #000;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(56, 189, 248, 0.4);
-    }
-
-    /* ===== TECH STACK BADGES ===== */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 15px;
-      margin-top: 10px;
-    }
-
-    .skill-card {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 15px;
-      text-align: center;
-      transition: all 0.3s;
+      font-size: 0.9rem;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
-    .skill-card:hover {
-      background: rgba(56, 189, 248, 0.1);
-      border-color: var(--cyan);
-      transform: scale(1.05);
+    button {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 700;
+      border: none;
     }
 
-    .skill-icon {
-      font-size: 24px;
-      margin-bottom: 8px;
-      display: block;
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px var(--accent-glow);
     }
 
-    .skill-name {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    /* ===== EXPERIENCE TIMELINE ===== */
-    .timeline-item {
+    .file-btn {
       position: relative;
-      padding-left: 28px;
-      padding-bottom: 25px;
-      border-left: 2px solid var(--card-border);
+      overflow: hidden;
+      display: inline-block;
     }
 
-    .timeline-item:last-child {
-      padding-bottom: 0;
-      border-left-color: transparent;
-    }
-
-    .timeline-item::before {
-      content: '</>';
-      font-family: monospace;
-      font-size: 10px;
-      font-weight: bold;
-      color: var(--cyan);
+    .file-btn input[type="file"] {
       position: absolute;
-      left: -12px;
+      left: 0;
       top: 0;
-      width: 22px;
-      height: 22px;
-      background: var(--bg-dark);
-      border: 1px solid var(--cyan);
-      border-radius: 50%;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* HUD STATS */
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 10px 15px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .stats-row span {
+      color: var(--accent);
+    }
+
+    /* PUZZLE BOARD */
+    #puzzle-board {
+      width: 400px;
+      height: 400px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      background: #000;
+    }
+
+    .tile {
+      position: absolute;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1);
+      border: 1px solid rgba(0, 0, 0, 0.3);
+      box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+    }
+
+    .tile.empty {
+      background: transparent !important;
+      border: none;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    /* PREVIEW & MODAL */
+    .preview-box {
       display: flex;
       align-items: center;
-      justify-content: center;
-    }
-
-    .timeline-item h3 {
-      font-size: 17px;
-      color: #fff;
-    }
-
-    .timeline-item .company {
-      color: var(--cyan);
-      font-size: 14px;
-      font-weight: 500;
-      margin-bottom: 4px;
-    }
-
-    .timeline-item .duration {
-      font-size: 12px;
+      gap: 10px;
+      font-size: 0.85rem;
       color: var(--text-sub);
-      margin-bottom: 8px;
     }
 
-    .timeline-item p {
-      font-size: 14px;
-      color: #cbd5e1;
-      line-height: 1.6;
+    #preview-img {
+      width: 45px;
+      height: 45px;
+      border-radius: 6px;
+      object-fit: cover;
+      border: 1px solid var(--accent);
     }
 
-    @media (max-width: 700px) {
-      .profile-flex {
-        flex-direction: column;
-        text-align: center;
-      }
-      .contact-row, .socials {
-        justify-content: center;
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 100;
+    }
+
+    .modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #1e293b;
+      padding: 30px 40px;
+      border-radius: 20px;
+      text-align: center;
+      border: 1px solid var(--accent);
+      box-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    .modal-content h2 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--accent);
+    }
+
+    @media (max-width: 460px) {
+      #puzzle-board {
+        width: 300px;
+        height: 300px;
       }
     }
   </style>
 </head>
 <body>
 
-  <!-- BACKGROUND CIRCUIT CANVAS -->
-  <canvas id="circuit-canvas"></canvas>
+  <h1>Photo Sliding Puzzle</h1>
+  <p class="subtitle">Arrange the tiles back in order to complete the photo</p>
 
-  <div class="container">
+  <div class="game-container">
+    <!-- CONTROLS -->
+    <div class="controls-bar">
+      <select id="grid-select">
+        <option value="3">3 x 3 (Easy)</option>
+        <option value="4" selected>4 x 4 (Medium)</option>
+        <option value="5">5 x 5 (Hard)</option>
+      </select>
 
-    <!-- 3D LAPTOP HERO SECTION -->
-    <div class="laptop-stage">
-      <div class="laptop">
-        <div class="laptop-screen">
-          <div class="vscode-header">
-            <span class="btn-dot btn-red"></span>
-            <span class="btn-dot btn-yellow"></span>
-            <span class="btn-dot btn-green"></span>
-            <span class="vscode-file">portfolio.js — Visual Studio Code</span>
-          </div>
-          <div class="code-line"><span class="tag">const</span> <span class="attr">developer</span> = {</div>
-          <div class="code-line">&nbsp;&nbsp;<span class="attr">name</span>: <span class="val">'G prasanna'</span>,</div>
-          <div class="code-line">&nbsp;&nbsp;<span class="attr">role</span>: <span class="val">'Frontend Web Developer'</span>,</div>
-          <div class="code-line">&nbsp;&nbsp;<span class="attr">status</span>: <span class="val">'Available for projects 🚀'</span></div>
-          <div class="code-line">};</div>
-        </div>
-        <div class="laptop-base">
-          <div class="laptop-notch"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MAIN PROFILE HEADER CARD -->
-    <div class="dev-card">
-      <div class="profile-flex">
-        <div class="avatar-wrapper">
-          <img src="C:\Users\Skill\Downloads\sample-100kb.jpeg" alt="G prasanna" class="profile-img">
-        </div>
-        <div>
-          <h1 class="dev-name">G prasanna</h1>
-          <p class="dev-role">Frontend Web Developer & UI Engineer</p>
-          <div class="contact-row">
-            <span>📧 guraiahgangipogu539.@gmail.com</span>
-            <span>📱 +91 8688181096</span>
-            <span>📍 Porumamilla, India</span>
-          </div>
-          <div class="socials">
-            <a href="#" class="social-btn">LinkedIn</a>
-            <a href="#" class="social-btn">vercel</a>
-            <a href="#" class="social-btn">Portfolio</a>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ABOUT SECTION -->
-    <div class="dev-card">
-      <h2 style="font-size: 20px; color: #fff; margin-bottom: 15px;">// About Me</h2>
-      <p style="color: #cbd5e1; line-height: 1.8; font-size: 15px;">
-        Passionate Frontend Developer specialized in transforming creative ideas into clean, interactive, and high-performance websites. Experienced in modern HTML, CSS, JavaScript workflows, and building responsive user interfaces.
-      </p>
-    </div>
-
-    <!-- SKILLS GRID -->
-    <div class="dev-card">
-      <h2 style="font-size: 20px; color: #fff; margin-bottom: 20px;">// Tech Stack & Tools</h2>
-      <div class="skills-grid">
-        <div class="skill-card"><span class="skill-icon">🌐</span><span class="skill-name">HTML5</span></div>
-        <div class="skill-card"><span class="skill-icon">🎨</span><span class="skill-name">CSS3</span></div>
-        <div class="skill-card"><span class="skill-icon">⚡</span><span class="skill-name">JavaScript</span></div>
-        <div class="skill-card"><span class="skill-icon">📱</span><span class="skill-name">Responsive UI</span></div>
-        <div class="skill-card"><span class="skill-icon">🐙</span><span class="skill-name">Git & GitHub</span></div>
-        <div class="skill-card"><span class="skill-icon">💻</span><span class="skill-name">VS Code</span></div>
-      </div>
-    </div>
-
-    <!-- EXPERIENCE -->
-    <div class="dev-card">
-      <h2 style="font-size: 20px; color: #fff; margin-bottom: 20px;">// Work Experience</h2>
-      <div class="timeline-item">
-        <h3>Frontend Developer</h3>
-        <p class="company">Company Name Pvt Ltd</p>
-        <p class="duration">Jan 2024 – Present</p>
-        <p>Architecting responsive websites, optimizing frontend code performance, and implementing UI components using modern web technologies.</p>
+      <div class="file-btn">
+        📷 Upload Photo
+        <input type="file" id="image-upload" accept="image/*">
       </div>
 
-      <div class="timeline-item">
-        <h3>Web Design Intern</h3>
-        <p class="company">Digital Solutions</p>
-        <p class="duration">Jun 2023 – Dec 2023</p>
-        <p>Assisted in building custom landing pages, solving UI layout bugs, and implementing modern website designs.</p>
-      </div>
+      <button id="shuffle-btn">🔄 Shuffle</button>
     </div>
 
+    <!-- HUD STATS -->
+    <div class="stats-row">
+      <div>Moves: <span id="move-count">0</span></div>
+      <div>Time: <span id="timer">00:00</span></div>
+    </div>
+
+    <!-- BOARD -->
+    <div id="puzzle-board"></div>
+
+    <!-- PREVIEW -->
+    <div class="preview-box">
+      <span>Original Image:</span>
+      <img id="preview-img" src="" alt="Target Preview">
+    </div>
+  </div>
+
+  <!-- VICTORY MODAL -->
+  <div class="modal" id="victory-modal">
+    <div class="modal-content">
+      <h2>🎉 Puzzle Solved!</h2>
+      <p id="victory-stats" style="margin-bottom: 20px; color: var(--text-sub);"></p>
+      <button id="play-again-btn">Play Again</button>
+    </div>
   </div>
 
   <script>
-    // CIRCUIT GRID CANVAS ANIMATION
-    const canvas = document.getElementById('circuit-canvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    // --- SOUND EFFECTS (Web Audio API) ---
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+      }
+      init() {
+        if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      slide() {
+        if (!this.ctx) return;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, this.ctx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, this.ctx.currentTime);
+        gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start();
+        osc.stop(this.ctx.currentTime + 0.08);
+      }
+      win() {
+        if (!this.ctx) return;
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.1);
+          gain.gain.setValueAtTime(0.2, this.ctx.currentTime + i * 0.1);
+          gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + i * 0.1 + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + i * 0.1);
+          osc.stop(this.ctx.currentTime + i * 0.1 + 0.3);
+        });
+      }
     }
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
 
-    const particles = Array.from({ length: 50 }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      radius: Math.random() * 2 + 1,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5
-    }));
+    const sound = new SoundFX();
 
-    function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "#38bdf8";
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.1)";
+    // --- GAME STATE ---
+    let gridSize = 4;
+    let tiles = [];
+    let emptyRow, emptyCol;
+    let moves = 0;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+    let isPlaying = false;
+    let currentImageSrc = '';
 
-      particles.forEach((p, index) => {
-        p.x += p.vx;
-        p.y += p.vy;
+    // Sample Default Images (Canvas Generated Gradient Patterns)
+    function generateDefaultImage() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 600;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
 
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+      // Vibrant Gradient
+      const grad = ctx.createLinearGradient(0, 0, 600, 600);
+      grad.addColorStop(0, '#00f2fe');
+      grad.addColorStop(0.5, '#4facfe');
+      grad.addColorStop(1, '#6b11ff');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 600, 600);
 
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
+      // Decorative shapes
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.beginPath();
+      ctx.arc(300, 300, 200, 0, Math.PI * 2);
+      ctx.fill();
 
-        // Connect nearby points like a circuit board grid
-        for (let j = index + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.stroke();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.fillRect(100, 100, 400, 400);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 48px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('SOLVE ME!', 300, 315);
+
+      return canvas.toDataURL();
+    }
+
+    currentImageSrc = generateDefaultImage();
+
+    // DOM ELEMENTS
+    const board = document.getElementById('puzzle-board');
+    const gridSelect = document.getElementById('grid-select');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+    const imageUpload = document.getElementById('image-upload');
+    const previewImg = document.getElementById('preview-img');
+    const moveDisplay = document.getElementById('move-count');
+    const timerDisplay = document.getElementById('timer');
+    const victoryModal = document.getElementById('victory-modal');
+    const playAgainBtn = document.getElementById('play-again-btn');
+
+    previewImg.src = currentImageSrc;
+
+    // --- BOARD INITIALIZATION ---
+    function initGame() {
+      sound.init();
+      gridSize = parseInt(gridSelect.value);
+      board.innerHTML = '';
+      tiles = [];
+      moves = 0;
+      secondsElapsed = 0;
+      moveDisplay.textContent = moves;
+      timerDisplay.textContent = '00:00';
+      clearInterval(timerInterval);
+      isPlaying = false;
+
+      const boardSize = board.clientWidth;
+      const tileSize = boardSize / gridSize;
+
+      emptyRow = gridSize - 1;
+      emptyCol = gridSize - 1;
+
+      for (let r = 0; r < gridSize; r++) {
+        tiles[r] = [];
+        for (let c = 0; c < gridSize; c++) {
+          const tile = document.createElement('div');
+          tile.classList.add('tile');
+          tile.style.width = `${tileSize}px`;
+          tile.style.height = `${tileSize}px`;
+
+          if (r === emptyRow && c === emptyCol) {
+            tile.classList.add('empty');
+            tiles[r][c] = { element: tile, originalRow: r, originalCol: c };
+            board.appendChild(tile);
+            continue;
+          }
+
+          tile.style.backgroundImage = `url(${currentImageSrc})`;
+          tile.style.backgroundSize = `${boardSize}px ${boardSize}px`;
+          tile.style.backgroundPosition = `-${c * tileSize}px -${r * tileSize}px`;
+
+          setTilePosition(tile, r, c, tileSize);
+
+          tile.addEventListener('click', () => onTileClick(r, c));
+
+          tiles[r][c] = { element: tile, originalRow: r, originalCol: c };
+          board.appendChild(tile);
+        }
+      }
+    }
+
+    function setTilePosition(element, row, col, size) {
+      element.style.transform = `translate(${col * size}px, ${row * size}px)`;
+    }
+
+    // --- SHUFFLE ALGORITHM (Guarantees Solvability) ---
+    function shuffleBoard() {
+      sound.init();
+      const boardSize = board.clientWidth;
+      const tileSize = boardSize / gridSize;
+      const movesCount = gridSize * 30;
+
+      for (let i = 0; i < movesCount; i++) {
+        const neighbors = getValidNeighbors(emptyRow, emptyCol);
+        const randomNeighbor = neighbors[Math.floor(Math.random() * neighbors.length)];
+        swapTiles(randomNeighbor.row, randomNeighbor.col, false);
+      }
+
+      moves = 0;
+      secondsElapsed = 0;
+      moveDisplay.textContent = moves;
+      timerDisplay.textContent = '00:00';
+      startTimer();
+      isPlaying = true;
+    }
+
+    function getValidNeighbors(r, c) {
+      const neighbors = [];
+      if (r > 0) neighbors.push({ row: r - 1, col: c });
+      if (r < gridSize - 1) neighbors.push({ row: r + 1, col: c });
+      if (c > 0) neighbors.push({ row: r, col: c - 1 });
+      if (c < gridSize - 1) neighbors.push({ row: r, col: c + 1 });
+      return neighbors;
+    }
+
+    // --- TILE CLICK & MOVEMENT ---
+    function onTileClick(r, c) {
+      // Find current position of clicked tile
+      let currR, currC;
+      for (let row = 0; row < gridSize; row++) {
+        for (let col = 0; col < gridSize; col++) {
+          if (tiles[row][col] && tiles[row][col].element === board.children[r * gridSize + c]) {
+            // Find by reference
           }
         }
-      });
-      requestAnimationFrame(animate);
-    }
-    animate();
-  </script>
+      }
 
+      // Check if adjacent to empty space
+      if (Math.abs(r - emptyRow) + Math.abs(c - emptyCol) === 1) {
+        if (!isPlaying) startTimer();
+        swapTiles(r, c, true);
+        sound.slide();
+        moves++;
+        moveDisplay.textContent = moves;
+        checkWinCondition();
+      }
+    }
+
+    function swapTiles(r, c, animate = true) {
+      const tileSize = board.clientWidth / gridSize;
+
+      // Swap grid coordinates in matrix
+      const clickedTile = tiles[r][c];
+      const emptyTile = tiles[emptyRow][emptyCol];
+
+      setTilePosition(clickedTile.element, emptyRow, emptyCol, tileSize);
+      setTilePosition(emptyTile.element, r, c, tileSize);
+
+      tiles[emptyRow][emptyCol] = clickedTile;
+      tiles[r][c] = emptyTile;
+
+      emptyRow = r;
+      emptyCol = c;
+    }
+
+    // --- TIMER ---
+    function startTimer() {
+      clearInterval(timerInterval);
+      isPlaying = true;
+      timerInterval = setInterval(() => {
+        secondsElapsed++;
+        const mins = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+        const secs = String(secondsElapsed % 60).padStart(2, '0');
+        timerDisplay.textContent = `${mins}:${secs}`;
+      }, 1000);
+    }
+
+    // --- WIN CONDITION ---
+    function checkWinCondition() {
+      for (let r = 0; r < gridSize; r++) {
+        for (let c = 0; c < gridSize; c++) {
+          const tile = tiles[r][c];
+          if (tile.originalRow !== r || tile.originalCol !== c) {
+            return false;
+          }
+        }
+      }
+
+      // Solved!
+      clearInterval(timerInterval);
+      isPlaying = false;
+      sound.win();
+
+      document.getElementById('victory-stats').innerHTML = 
+        `Completed in <b>${moves}</b> moves and <b>${timerDisplay.textContent}</b>!`;
+      victoryModal.classList.add('active');
+    }
+
+    // --- EVENT LISTENERS ---
+    gridSelect.addEventListener('change', initGame);
+    shuffleBtn.addEventListener('click', shuffleBoard);
+    playAgainBtn.addEventListener('click', () => {
+      victoryModal.classList.remove('active');
+      shuffleBoard();
+    });
+
+    imageUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          currentImageSrc = event.target.result;
+          previewImg.src = currentImageSrc;
+          initGame();
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    window.addEventListener('resize', initGame);
+
+    // Initial Start
+    initGame();
+  </script>
 </body>
 </html>
